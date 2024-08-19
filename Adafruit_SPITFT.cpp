@@ -1654,6 +1654,16 @@ void Adafruit_SPITFT::drawPixel(int16_t x, int16_t y, uint16_t color) {
   }
 }
 
+void Adafruit_SPITFT::prepareDrawBitmap(uint16_t x, uint16_t y, uint16_t w, uint16_t h) {
+  if (((x + w) < _width) && ((y + h) < _height)) {
+    setAddrWindow(x, y, w, h);
+  }
+}
+
+void Adafruit_SPITFT::writeBitmapPixel(int16_t x, int16_t y, uint16_t color) {
+  SPI_WRITE16(color);
+}
+
 /*!
     @brief  Draw a filled rectangle to the display. Self-contained and
             provides its own transaction as needed (see writeFillRect() or

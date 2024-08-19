@@ -243,6 +243,8 @@ public:
   // solo -- that is, as graphics primitives in themselves, not invoked by
   // higher-level primitives (which should use the functions above).
   void drawPixel(int16_t x, int16_t y, uint16_t color);
+  void prepareDrawBitmap(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
+  void writeBitmapPixel(int16_t x, int16_t y, uint16_t color);
   void fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
   void drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
   void drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);

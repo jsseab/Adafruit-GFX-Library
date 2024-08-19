@@ -30,6 +30,31 @@ public:
   */
   /**********************************************************************/
   virtual void drawPixel(int16_t x, int16_t y, uint16_t color) = 0;
+  
+  
+  /**********************************************************************/
+  /*!
+    @brief  Prepare drawing/writing of a filled bitmap
+    Must be overridden in subclass.
+    @param  x    X coordinate in pixels
+    @param  y    Y coordinate in pixels
+    @param  w    Width of bitmap in pixels
+    @param  h    Height of bitmap in pixels
+  */
+  /**********************************************************************/
+  virtual void prepareDrawBitmap(uint16_t x, uint16_t y, uint16_t w, uint16_t h) = 0;
+  
+  /**********************************************************************/
+  /*!
+    @brief  Write one pixel of a bitmap; should use optimized write 
+    operation if possible (e.g. rely on auto-incremented address)
+    Must be overridden in subclass.
+    @param  x      X coordinate in pixels
+    @param  y      Y coordinate in pixels
+    @param  color  16-bit pixel color
+  */
+  /**********************************************************************/
+  virtual void writeBitmapPixel(int16_t x, int16_t y, uint16_t color) = 0;
 
   // TRANSACTION API / CORE DRAW API
   // These MAY be overridden by the subclass to provide device-specific
@@ -312,6 +337,8 @@ public:
   GFXcanvas1(uint16_t w, uint16_t h);
   ~GFXcanvas1(void);
   void drawPixel(int16_t x, int16_t y, uint16_t color);
+  void prepareDrawBitmap(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
+  void writeBitmapPixel(int16_t x, int16_t y, uint16_t color);
   void fillScreen(uint16_t color);
   void drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
   void drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);

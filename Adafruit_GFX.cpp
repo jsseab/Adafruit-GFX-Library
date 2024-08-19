@@ -756,13 +756,14 @@ void Adafruit_GFX::drawBitmap(int16_t x, int16_t y, const uint8_t bitmap[],
   uint8_t b = 0;
 
   startWrite();
+  prepareDrawBitmap(x, y, w, h);
   for (int16_t j = 0; j < h; j++, y++) {
     for (int16_t i = 0; i < w; i++) {
       if (i & 7)
         b <<= 1;
       else
         b = pgm_read_byte(&bitmap[j * byteWidth + i / 8]);
-      writePixel(x + i, y, (b & 0x80) ? color : bg);
+      writeBitmapPixel(x + i, y, (b & 0x80) ? color : bg);
     }
   }
   endWrite();
@@ -821,13 +822,14 @@ void Adafruit_GFX::drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w,
   uint8_t b = 0;
 
   startWrite();
+  prepareDrawBitmap(x, y, w, h);
   for (int16_t j = 0; j < h; j++, y++) {
     for (int16_t i = 0; i < w; i++) {
       if (i & 7)
         b <<= 1;
       else
         b = bitmap[j * byteWidth + i / 8];
-      writePixel(x + i, y, (b & 0x80) ? color : bg);
+      writeBitmapPixel(x + i, y, (b & 0x80) ? color : bg);
     }
   }
   endWrite();
@@ -853,7 +855,7 @@ void Adafruit_GFX::drawXBitmap(int16_t x, int16_t y, const uint8_t bitmap[],
 
   int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
   uint8_t b = 0;
-
+  
   startWrite();
   for (int16_t j = 0; j < h; j++, y++) {
     for (int16_t i = 0; i < w; i++) {
@@ -886,9 +888,10 @@ void Adafruit_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
                                        const uint8_t bitmap[], int16_t w,
                                        int16_t h) {
   startWrite();
+  prepareDrawBitmap(x, y, w, h);
   for (int16_t j = 0; j < h; j++, y++) {
     for (int16_t i = 0; i < w; i++) {
-      writePixel(x + i, y, (uint8_t)pgm_read_byte(&bitmap[j * w + i]));
+      writeBitmapPixel(x + i, y, (uint8_t)pgm_read_byte(&bitmap[j * w + i]));
     }
   }
   endWrite();
@@ -909,9 +912,10 @@ void Adafruit_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
 void Adafruit_GFX::drawGrayscaleBitmap(int16_t x, int16_t y, uint8_t *bitmap,
                                        int16_t w, int16_t h) {
   startWrite();
+  prepareDrawBitmap(x, y, w, h);
   for (int16_t j = 0; j < h; j++, y++) {
     for (int16_t i = 0; i < w; i++) {
-      writePixel(x + i, y, bitmap[j * w + i]);
+      writeBitmapPixel(x + i, y, bitmap[j * w + i]);
     }
   }
   endWrite();
@@ -1001,9 +1005,10 @@ void Adafruit_GFX::drawGrayscaleBitmap(int16_t x, int16_t y, uint8_t *bitmap,
 void Adafruit_GFX::drawRGBBitmap(int16_t x, int16_t y, const uint16_t bitmap[],
                                  int16_t w, int16_t h) {
   startWrite();
+  prepareDrawBitmap(x, y, w, h);
   for (int16_t j = 0; j < h; j++, y++) {
     for (int16_t i = 0; i < w; i++) {
-      writePixel(x + i, y, pgm_read_word(&bitmap[j * w + i]));
+      writeBitmapPixel(x + i, y, pgm_read_word(&bitmap[j * w + i]));
     }
   }
   endWrite();
@@ -1023,9 +1028,10 @@ void Adafruit_GFX::drawRGBBitmap(int16_t x, int16_t y, const uint16_t bitmap[],
 void Adafruit_GFX::drawRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap,
                                  int16_t w, int16_t h) {
   startWrite();
+  prepareDrawBitmap(x, y, w, h);
   for (int16_t j = 0; j < h; j++, y++) {
     for (int16_t i = 0; i < w; i++) {
-      writePixel(x + i, y, bitmap[j * w + i]);
+      writeBitmapPixel(x + i, y, bitmap[j * w + i]);
     }
   }
   endWrite();
@@ -1821,6 +1827,16 @@ void GFXcanvas1::drawPixel(int16_t x, int16_t y, uint16_t color) {
       *ptr &= ~(0x80 >> (x & 7));
 #endif
   }
+}
+
+
+void GFXcanvas1::prepareDrawBitmap(uint16_t x, uint16_t y, uint16_t w, uint16_t h) {
+  // Nothing special required here; the whole canvas is available in RAW
+}
+
+void GFXcanvas1::writeBitmapPixel(int16_t x, int16_t y, uint16_t color) {
+  // Use standard pixel-by-pixel function (will probably call drawPixel)
+  writePixel(x, y, color);
 }
 
 /**********************************************************************/
